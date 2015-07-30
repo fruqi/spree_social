@@ -28,14 +28,25 @@ module SpreeSocial
   # Setup all OAuth providers
   def self.init_provider(provider)
     return unless ActiveRecord::Base.connection.table_exists?('spree_authentication_methods')
+
+    puts ??*30
+    
     key, secret = nil
     Spree::AuthenticationMethod.where(:environment => ::Rails.env).each do |auth_method|
       if auth_method.provider == provider
+        puts " --- Inside auth_method.provider == provider"
         key = auth_method.api_key
         secret = auth_method.api_secret
         Rails.logger.info("[Spree Social] Loading #{auth_method.provider.capitalize} as authentication source")
       end
     end
+
+    puts ??*30
+    puts "provider: #{provider}"
+    puts "key: #{key}"
+    puts "secret: #{secret}"
+    puts ??*30
+
     self.setup_key_for(provider.to_sym, key, secret)
   end
 
